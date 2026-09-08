@@ -1,0 +1,24 @@
+.App {
+  text-align: center;
+}
+
+.stats-container {
+  margin-bottom: 20px;
+}
+
+.card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-check-label {
+  margin-left: 5px;
+}
+
+a {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
