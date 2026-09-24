@@ -6,18 +6,36 @@ import Link from "next/link";
 import { User, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { TextField } from "@/components/ui/TextField";
 import { Button } from "@/components/ui/Button";
+import { register } from "@/lib/auth";
 
 export const RegisterForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Registering user:", formData);
+
+    try {
+      const response = await register({
+        full_name: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      console.log("Registration successful:", response);
+
+      alert("Account created successfully!");
+
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Registration failed:", error);
+      alert("Registration failed. Please try again.");
+    }
   };
 
   return (
@@ -27,8 +45,10 @@ export const RegisterForm: React.FC = () => {
           <h2 className="text-2xl lg:text-3xl font-semibold text-white tracking-tight">
             Create an account
           </h2>
+
           <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-            Get started with structured practice modules, coding arenas, and interview preparation.
+            Get started with structured practice modules, coding arenas, and
+            interview preparation.
           </p>
         </div>
 
@@ -39,7 +59,10 @@ export const RegisterForm: React.FC = () => {
             placeholder="Full Name"
             value={formData.fullName}
             onChange={(e) =>
-              setFormData({ ...formData, fullName: e.target.value })
+              setFormData({
+                ...formData,
+                fullName: e.target.value,
+              })
             }
             leftIcon={<User className="w-4 h-4" />}
             required
@@ -50,7 +73,10 @@ export const RegisterForm: React.FC = () => {
             placeholder="Email address"
             value={formData.email}
             onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
+              setFormData({
+                ...formData,
+                email: e.target.value,
+              })
             }
             leftIcon={<Mail className="w-4 h-4" />}
             required
@@ -61,7 +87,10 @@ export const RegisterForm: React.FC = () => {
             placeholder="Password"
             value={formData.password}
             onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
+              setFormData({
+                ...formData,
+                password: e.target.value,
+              })
             }
             leftIcon={<Lock className="w-4 h-4" />}
             rightIcon={
@@ -69,7 +98,9 @@ export const RegisterForm: React.FC = () => {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="focus:outline-none"
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={
+                  showPassword ? "Hide password" : "Show password"
+                }
               >
                 {showPassword ? (
                   <EyeOff className="w-4 h-4 text-slate-400 hover:text-slate-200" />

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { TextField } from "@/components/ui/TextField";
 import { Button } from "@/components/ui/Button";
+import { login } from "@/lib/auth";
 
 export const LoginForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,9 +14,24 @@ export const LoginForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Logging in with:", { email, password, rememberMe });
+
+    try {
+      const response = await login({
+        email,
+        password,
+      });
+
+      console.log("Login successful:", response);
+
+      alert("Login successful!");
+
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert("Incorrect email or password.");
+    }
   };
 
   return (
@@ -26,8 +42,10 @@ export const LoginForm: React.FC = () => {
           <h2 className="text-2xl lg:text-3xl font-semibold text-white tracking-tight">
             Welcome back
           </h2>
+
           <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-            Sign in to access your preparation modules, practice sets, and track your progress.
+            Sign in to access your preparation modules, practice sets, and
+            track your progress.
           </p>
         </div>
 
@@ -53,7 +71,9 @@ export const LoginForm: React.FC = () => {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="focus:outline-none"
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={
+                  showPassword ? "Hide password" : "Show password"
+                }
               >
                 {showPassword ? (
                   <EyeOff className="w-4 h-4 text-slate-400 hover:text-slate-200" />
@@ -65,7 +85,7 @@ export const LoginForm: React.FC = () => {
             required
           />
 
-          {/* Utility Actions: Remember Me & Forgot Password */}
+          {/* Utility Actions */}
           <div className="flex items-center justify-between text-xs pt-1">
             <label className="flex items-center gap-2 cursor-pointer text-slate-400 hover:text-slate-300">
               <input
@@ -76,6 +96,7 @@ export const LoginForm: React.FC = () => {
               />
               <span>Remember me</span>
             </label>
+
             <Link
               href="/forgot-password"
               className="text-slate-400 hover:text-cyan-400 transition-colors"
@@ -94,8 +115,11 @@ export const LoginForm: React.FC = () => {
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-slate-800" />
           </div>
+
           <div className="relative flex justify-center text-xs">
-            <span className="bg-[#111827] px-3 text-slate-500">or</span>
+            <span className="bg-[#111827] px-3 text-slate-500">
+              or
+            </span>
           </div>
         </div>
 
